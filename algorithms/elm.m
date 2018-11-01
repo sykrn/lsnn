@@ -3,7 +3,7 @@ classdef elm
     %   Detailed explanation goes here
     
     properties
-        cReg = 0
+        cReg = 1e-6
         nHidden = 100
         weights = {}
         traintime = 0

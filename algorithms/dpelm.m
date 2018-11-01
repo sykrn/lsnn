@@ -3,7 +3,6 @@ classdef dpelm
     %   Detailed explanation goes here
     
     properties
-        cReg = 0
         nHidden = 100
         weights = {}
         traintime = 0
@@ -17,7 +16,6 @@ classdef dpelm
             %   Detailed explanation goes here
            if nargin > 0
                obj.nHidden=varargin{1};
-               obj.cReg=varargin{2};
            end
         end
         

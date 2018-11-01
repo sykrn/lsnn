@@ -3,7 +3,6 @@ classdef cpelm
     %   Detailed explanation goes here
     
     properties
-        cReg = 0
         nHidden = 100
         weights = {}
         traintime = 0

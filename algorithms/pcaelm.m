@@ -3,7 +3,7 @@ classdef pcaelm
     %   Detailed explanation goes here
     
     properties
-        cReg = 0
+        cReg = 1e-6
         confLev = 0.95
         weights = {}
         traintime = 0

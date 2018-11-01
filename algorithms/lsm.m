@@ -9,7 +9,7 @@ classdef lsm
         weights = {}
         traintime = 0
         err = 0
-        lambda = 1e-4
+        lambda = 1e-6
     end
     
     methods
@@ -36,14 +36,14 @@ classdef lsm
             
             % regularize
             C = diag([0 ones(1,m)]*obj.lambda);
-            invxx = pinv(xx'*xx + C);
+            invxx = xx'*xx + C;
             span = obj.smParams(1)*n;
             sh = floor(span/2);
             span = 2*sh+1;
             w=[];
             
             for i = 1:obj.iter
-                w0 = invxx*(xx'*y);
+                w0 = invxx\(xx'*y);
                 yp = xx*w0;
                 
                 %sort by prediction axis
