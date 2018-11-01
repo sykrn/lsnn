@@ -11,7 +11,7 @@ iter = 50;
 net = lsm(1,1);
 % net =elm(25,0);
 
-for k = 1:1
+for k = 8:8
     dataset=mapminmax(csvread([datapath,datalist{k}])',-1,1)';
     x=dataset(:,1:(size(dataset,2)-1));
     y=dataset(:,size(dataset,2));

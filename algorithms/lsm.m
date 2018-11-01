@@ -40,6 +40,9 @@ classdef lsm
             span = obj.smParams(1)*n;
             sh = floor(span/2);
             span = 2*sh+1;
+            if span < 3
+                span = 3;
+            end
             w=[];
             
             for i = 1:obj.iter
