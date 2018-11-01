@@ -1,4 +1,4 @@
-# lsnn 
+# lsnn (Least Square Neural Networks)
 
 This project for non iterative algorithm development
 List of algorithms:
