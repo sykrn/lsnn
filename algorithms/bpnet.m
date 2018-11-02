@@ -17,11 +17,12 @@ classdef bpnet
             net = fitnet(N);
             net.trainParam.showWindow=0;
             net.trainParam.epochs=100;
-            net.divideParam.trainRatio = 1;
-            net.divideParam.valRatio = 0;
+            net.divideParam.trainRatio = 0.85;
+            net.divideParam.valRatio = 0.15;
             net.divideParam.testRatio = 0;
+            net.performParam.normalization = 'None';
             obj.model =net;   
-            obj.weights = zeros(1,N);
+            obj.weights{1} = zeros(1,N);
         end
         
         function obj = train(obj,x,y)

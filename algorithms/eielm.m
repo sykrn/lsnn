@@ -30,7 +30,6 @@ classdef eielm
         function obj = train(obj,x,t)
             k=obj.K;
             nHidden=obj.N;
-            rng('shuffle');
             
             start_time=cputime;
             [nInstances,nfeatures]=size(x);  

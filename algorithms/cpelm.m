@@ -16,7 +16,6 @@ classdef cpelm
             %   Detailed explanation goes here
            if nargin > 0
                obj.nHidden=varargin{1};
-               obj.cReg=varargin{2};
            end
         end
         
@@ -29,9 +28,7 @@ classdef cpelm
         
         function obj = train(obj,x,t)
             
-            N=obj.nHidden;
-            rng('shuffle');
-            
+            N=obj.nHidden;            
       
             eps=obj.eta;
 

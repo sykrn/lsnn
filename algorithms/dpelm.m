@@ -28,9 +28,7 @@ classdef dpelm
         
         function obj = train(obj,x,t)
             
-            N=obj.nHidden;
-            rng('shuffle');
-            
+            N=obj.nHidden;            
       
             eps=obj.eta;
 

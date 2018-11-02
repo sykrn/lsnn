@@ -63,7 +63,6 @@ classdef lsm
                 
                 % bend detection
                 iid1=locopt(y,1);
-                
                 % preset thresholding
                 if obj.reg
                     th = 1/4;
@@ -73,16 +72,19 @@ classdef lsm
                 
                 % reduce points
                 iid=clustpoint(iid1,y,th);
-                
-                % calculate each segments
-                for j=1:length(iid)
-                    idx = yp>yp(iid1(iid(j))) & yp < yp(iid1(iid(j)+1));
-                    ww = fitLS(xx(idx,:),t(idx,:),C);
-                    if norm(ww(2:m+1))>1e-4
-                        w=[w ww];
+                lid = length(iid);
+                if lid >0
+                    % calculate each segments
+                    for j=1:lid
+                        idx = yp>yp(iid1(iid(j))) & yp < yp(iid1(iid(j)+1));
+                        ww = fitLS(xx(idx,:),t(idx,:),obj.lambda);
+                        if norm(ww(2:m+1))>1e-4
+                            w=[w ww];
+                        end
                     end
+                else
+                    w=[w w0];
                 end
-                
                 % second weight and error calculation
                 hh = [ones(n,1) tanh(xx * w)];
                 w2 = (hh'*hh + diag([0 ones(1,size(w,2))]*obj.lambda))\(hh'*t);
@@ -90,8 +92,7 @@ classdef lsm
             end
             obj.err = mse(y);
             obj.traintime=cputime - starting_time;
-            obj.weights={w,w2};
-            
+            obj.weights={w,w2};            
         end
         
     end
@@ -102,7 +103,15 @@ function w = fitLS(x,y,C)
     %   Detailed explanation goes here
     s = 1;
     y = mapminmax(y',-s,s)';
-    w=(x'*x+C)\(x'*y);
+    [n,m] =size(x);
+     
+    if n>=m        
+        C = diag([0 ones(1,m-1)]*C);
+        w=(x'*x+C)\(x'*y);
+    else
+        C = diag(ones(1,n)*C);
+        w=x'*((x*x'+C)\y);
+    end
 end
 
 function idx = locopt(y,step)

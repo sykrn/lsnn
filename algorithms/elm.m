@@ -30,7 +30,6 @@ classdef elm
         function obj = train(obj,x,t)
             C=obj.cReg;
             N=obj.nHidden;
-            rng('shuffle');
             
             start_time=cputime;
             [nInstances,nfeatures]=size(x);

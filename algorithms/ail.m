@@ -15,7 +15,7 @@ classdef ail
     end
     
     methods
-        function obj = ail(class, mn,lambda)
+        function obj = ail(mn,class,lambda)
             %AIL Construct an instance of this class
             %   Detailed explanation goes here
             obj.maxNodes = mn;

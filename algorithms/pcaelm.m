@@ -24,12 +24,11 @@ classdef pcaelm
             %METHOD1 Summary of this method goes here
             %   Detailed explanation goes here
             n = size(x,1);
-            y = tanh([ones(n,1) x]*obj.weights{1})*obj.weights{2};
+            y = tanh(x*obj.weights{1})*obj.weights{2};
         end
         
         function obj = train(obj,x,t)
-            C=obj.cReg;
-            rng('shuffle');           
+            C=obj.cReg;       
             
             start_time=cputime;
             [U,V,~]=svd(x'*x);
