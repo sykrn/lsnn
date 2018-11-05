@@ -69,7 +69,6 @@ classdef cpelm
                 T(i:N,:)=Temp;
                 clear Temp;
 
-
                 if (trace(T(1:i,:)'*T(1:i,:))>=fnormT*(1-eps))
                     Lfinal=i;
                     break;
@@ -77,7 +76,7 @@ classdef cpelm
             end
 
             w1=w1(:,rIdx(1:Lfinal));
-            w2=R(1:Lfinal,1:Lfinal)\T(1:Lfinal,:);    
+            w2=pinv(full(R(1:Lfinal,1:Lfinal)))*T(1:Lfinal,:);    
             obj.traintime=cputime-start_time;
             clear R T;
 

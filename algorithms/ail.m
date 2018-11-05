@@ -5,7 +5,6 @@ classdef ail
     properties
         maxNodes = 50
         lambdaLS = 1e-6
-        isClass = false
         weights = {}
         traintime = 0
         fwtime = 0
@@ -15,12 +14,11 @@ classdef ail
     end
     
     methods
-        function obj = ail(mn,class,lambda)
+        function obj = ail(mn,lambda)
             %AIL Construct an instance of this class
             %   Detailed explanation goes here
             obj.maxNodes = mn;
             obj.lambdaLS = lambda;
-            obj.isClass = class;
         end
         
        

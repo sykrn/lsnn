@@ -70,7 +70,7 @@ classdef dpelm
             end
 
             w1=w1(:,rIdx);
-            w2=R\T;    
+            w2=pinv(full(R))*T;    
             obj.traintime=cputime-start_time;
             clear R T;
 

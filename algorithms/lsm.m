@@ -82,10 +82,12 @@ classdef lsm
                             w=[w ww];
                         end
                     end
-                else
+                end
+                if isempty(w)
                     w=[w w0];
                 end
                 % second weight and error calculation
+                
                 hh = [ones(n,1) tanh(xx * w)];
                 w2 = (hh'*hh + diag([0 ones(1,size(w,2))]*obj.lambda))\(hh'*t);
                 y = t - hh*w2; % reduce the error iteratively

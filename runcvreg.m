@@ -9,24 +9,25 @@ datanames ={'abalone','ailerons','autompg','bank','boston',...
     'california','elevators','servo','compAct','machineCPU','triazines','breastCancer' };
 L = length(datalist);
 
-netnames = {'elm','ielm','eielm','pcaelm','dpelm','cpelm','bpnet','lsm','ail'};
+netnames = {'lsm','elm','ielm','eielm','pcaelm','dpelm','cpelm','bpnet','ail'};
 
 n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
 
 
 ELMnode = [25,45,30,190,50,80,125,30,125,10,10,10];
 BPnode = [10,20,10,20,5,10,5,10,45,10,5,5];
+LSMiter =[4     4     1     7     3     9     4     1     6     2     2     1];
 
 iter = 50; % fifty trials
 
 perfs=struct;
 
-for idx = 1:length(netnames)  
+for idx = 1:1%length(netnames)  
     alname = netnames{idx}
     for k = 1:L        
         switch alname
             case 'lsm'
-                net = lsm(1,1); %args: (iteration, isReg?)
+                net = lsm(LSMiter(k),1); %args: (iteration, isReg?)
             case 'elm'
                 net = elm(ELMnode(k),1e-6); %args: (nHidden, cReg)
             case 'dpelm'
@@ -40,7 +41,7 @@ for idx = 1:length(netnames)
             case 'ielm'
                 net = eielm(ELMnode(k),1); %args: (nHidden)
             case 'ail'
-                net = ail(BPnode(k)*2,0,1e-6); %args: (iteration, isClass?, cReg/Lambda)
+                net = ail(BPnode(k)*2,1e-6); %args: (iteration,  cReg/Lambda)
             otherwise
                 net = bpnet(BPnode(k)); %args: (nHidden)
         end
@@ -57,13 +58,13 @@ for idx = 1:length(netnames)
             cv(i+1) = repartition(cv(i));
         end
         
-        perfs.(alname).(datanames{k}) = runcvdata(x,y,cv,net);
+        perfs.(alname).(datanames{k}) = runcvdata(x,y,cv,net,0);
         
     end
     
 end
 
-save perfoms perfs;
+save perfomslsm perfs;
 
 
 
