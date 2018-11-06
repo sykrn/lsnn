@@ -22,8 +22,9 @@ iter = 50; % fifty trials
 
 perfs=struct;
 
-for idx = 1:1%length(netnames)  
+for idx = 1:length(netnames)  
     alname = netnames{idx}
+    clear cv
     for k = 1:L        
         switch alname
             case 'lsm'
@@ -64,7 +65,7 @@ for idx = 1:1%length(netnames)
     
 end
 
-save perfomslsm perfs;
+save performsreg perfs;
 
 
 

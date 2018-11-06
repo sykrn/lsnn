@@ -70,7 +70,9 @@ classdef dpelm
             end
 
             w1=w1(:,rIdx);
-            w2=pinv(full(R))*T;    
+            
+           
+            w2= pinv(full(R))*T;    
             obj.traintime=cputime-start_time;
             clear R T;
 
@@ -78,8 +80,7 @@ classdef dpelm
             %% construct the net      
             obj.weights{1}=w1;
             obj.weights{2}=w2;            
-        end
-    
+        end    
     end
 end
 

@@ -74,7 +74,7 @@ classdef cpelm
                     break;
                 end        
             end
-
+                      
             w1=w1(:,rIdx(1:Lfinal));
             w2=pinv(full(R(1:Lfinal,1:Lfinal)))*T(1:Lfinal,:);    
             obj.traintime=cputime-start_time;

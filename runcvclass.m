@@ -19,7 +19,7 @@ LSMiter=[8     2     2     4     1     3    10    10     7     7     2     1    
 
 perfs=struct;
 
-for idx = 1:1%length(netnames)  
+for idx = 1:length(netnames)  
     alname = netnames{idx}
     
     for k = 1:L        
@@ -55,8 +55,7 @@ for idx = 1:1%length(netnames)
             cv(ii).training = dt.(datalist{k}).train(ii,:);            
         end        
         perfs.(alname).(datanames{k}) = runcvdata(x,y,cv,net,1);        
-    end
-    
+    end    
 end
 
 save('performclasscpelm','perfs');
