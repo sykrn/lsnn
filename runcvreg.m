@@ -16,13 +16,18 @@ n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
 
 ELMnode = [25,45,30,190,50,80,125,30,125,10,10,10];
 BPnode = [10,20,10,20,5,10,5,10,45,10,5,5];
-LSMiter =[4     4     1     7     3     9     4     1     6     2     2     1];
 
+LSMiter = [4,4,1,6,3,7,2,2,4,2,1,1];%[1,1,2,6,3,7,3,2,4,2,1,1];%[4     4     1     7     3     9     4     1     6     2     2     1];
+% [1,1,1,6,2,5,1,2,11,3,1,1]
+% [2,2,2,9,3,6,1,3,9,1,1,1]
+% [1,2,2,4,2,8,2,1,4,5,1,1]
+% [1,1,2,6,2,6,3,2,4,1,1,1]
+% [1,1,2,7,3,10,2,4,4,2,1,1]
 iter = 50; % fifty trials
 
 perfs=struct;
 
-for idx = 1:length(netnames)  
+for idx = 1%:length(netnames)  
     alname = netnames{idx}
     clear cv
     for k = 1:L        
@@ -50,7 +55,7 @@ for idx = 1:length(netnames)
         dataset=normalize(csvread([datapath,datalist{k}]));
         dataset(isnan(dataset))=0;
         x=dataset(:,1:(size(dataset,2)-1));
-        y=dataset(:,size(dataset,2));
+        y=mapminmax(dataset(:,size(dataset,2)),-1,1);
         
         % to ensure the splits are the same for all algorithms
         rng(0);
@@ -65,7 +70,7 @@ for idx = 1:length(netnames)
     
 end
 
-save performsreg perfs;
+save performsreglsmr perfs;
 
 
 

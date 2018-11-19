@@ -12,8 +12,8 @@ n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
 
 % hyperparams
 % nodes = 5:5:200;
-nodes = 1:10;
-ncv = 5;
+nodes = 1:15;
+ncv = 10;
 
 
 bestnode = ones(1,length(datasets));
@@ -27,7 +27,7 @@ for j = 1:length(datasets)
     prev_err = 100;
     fails = zeros(1,length(nodes));       
     for i=1:length(nodes)
-        [j i]
+%         [j i]
         switch alname
             case 'lsm'
                 net = lsm(nodes(i),~class); %args: (iteration, isReg?)
@@ -72,7 +72,8 @@ for j = 1:length(datasets)
         end
         
         
-        
+        net.smParams(2)=10;
+        net.smParams(1)=0.01;
         results = runcvdata(x,y,cv,net,class); 
                
         if mean(results.tsPerf)<prev_err
@@ -87,6 +88,8 @@ for j = 1:length(datasets)
         end
         
     end
+    prev_err
+    
 end
 
-save([alname,'_nodesreg'],'bestnode');
+save([alname,'2_nodesreg'],'bestnode');

@@ -1,4 +1,4 @@
-classdef lsm
+classdef lsmr
     %LSM (Local sigmoid method) Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -13,7 +13,7 @@ classdef lsm
     end
     
     methods
-        function obj = lsm(iter,reg)
+        function obj = lsmr(iter,reg)
             %LSM Construct an instance of this class
             %   Detailed explanation goes here
             obj.iter = iter;
@@ -43,17 +43,22 @@ classdef lsm
             if span < 3
                 span = 3;
             end
-            w=[];
-            bestw2=[];
+            w1=[];
+            
+            inv=1/n;
+            H=ones(n,1);
+            u=H'*t;
             
             perr = mse(t);
             for i = 1:obj.iter
+                w=[];
                 w0 = invxx\(xx'*y);
                 yp = xx*w0;
                 
                 %sort by prediction axis
                 [~,ii] = sort(yp);
                 xx=xx(ii,:);
+                H=H(ii,:);
                 yp=yp(ii,:);
                 t=t(ii,:);
                 y=t;
@@ -89,24 +94,27 @@ classdef lsm
                 end
                 % second weight and error calculation
                 
-                hh = [ones(n,1) tanh(xx * w)];
-                w2 = (hh'*hh + diag([0 ones(1,size(w,2))]*obj.lambda))\(hh'*t);
-                yp =hh*w2;
+                
+                hh = tanh(xx * w);
+                for j=1:size(hh,2)
+                    [cond,inv,u,H] = blockInv(inv,u,H,hh(:,j),t);
+                    if cond
+                        w1 = [w1 w(:,j)];                        
+                    end
+                end
+                w2 =inv*u;
+                yp =H*w2;
                 y = t - yp; % reduce the error iteratively
                 
-                if abs((mse(y)-perr)/perr)<1e-3                 
-                    w2=bestw2;
-                    ss =size(w2,1)-1;
-                    w = w(:,1:ss);                    
+                if abs((mse(y)-perr)/perr)<1e-3
                     break;
                 else
-                    bestw2=w2;
+                    obj.weights={w1,w2};
                     perr=mse(y);
                     obj.err = perr;
                 end
             end
-            obj.traintime=cputime - starting_time;
-            obj.weights={w,w2};            
+            obj.traintime=cputime - starting_time;                      
         end
     end
 end
@@ -143,12 +151,23 @@ function idx = locopt(y,step)
     idx = find(yy<0);
 end
 
-function yy = grad2(y,xspan)
-    l = length(y);
-    xstep = xspan/l;
-    h2= xstep;
-    yy = ([y(2:l);0] - (2*y) + [0;y(1:l-1)])/h2;
-    yy([1,l])=0;
+function [cond,inv,u,H]=blockInv(inv,u,H,h,t)
+    cond=1;
+    v=H'*h;
+    d=h'*h;
+    theta=inv*v;
+    alpha=d-v'*theta;
+    
+    if (abs(alpha/d)<=1e-4)
+        cond=0;
+        return;          
+    end
+    
+    inv_s=1/alpha;
+    inv_c=-theta*inv_s;    
+    inv=[inv+inv_s*(theta*theta'), inv_c; inv_c' inv_s];   
+    H=[H,h];
+    u=[u; h'*t];    
 end
 
 function iid = clustpoint(idx,x,s)

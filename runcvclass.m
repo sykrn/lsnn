@@ -10,22 +10,21 @@ datanames = datalist;
 
 L = length(datalist);
 
-netnames = {'cpelm','lsm','elm','ielm','eielm','pcaelm','dpelm','lsm','ail','bpnet'};
-
+netnames = {'lsm','cpelm','lsm','elm','ielm','eielm','pcaelm','dpelm','ail','bpnet'};
 
 ELMnode = [50    20    30    10    40    30   200    40   165    35    20    65    85];
 BPnode = [15    45    45    10    75    10    15    50    80    25    25     5    10];
-LSMiter=[8     2     2     4     1     3    10    10     7     7     2     1     3];
+LSMiter=[8,1,1,2,2,2,15,10,7,7,5,1,3];%[8     2     2     4     1     3    10    10     7     7     2     1     3];
 
 perfs=struct;
 
-for idx = 1:length(netnames)  
+for idx = 1:1%length(netnames)  
     alname = netnames{idx}
     
     for k = 1:L        
         switch alname
             case 'lsm'
-                net = lsm(LSMiter(k),0); %args: (iteration, isReg?)
+                net = lsmr(LSMiter(k),0); %args: (iteration, isReg?)
             case 'elm'
                 net = elm(ELMnode(k),1e-6); %args: (nHidden, cReg)
             case 'dpelm'
@@ -58,7 +57,7 @@ for idx = 1:length(netnames)
     end    
 end
 
-save('performclasscpelm','perfs');
+save('performclasslsmr','perfs');
 
 
 
