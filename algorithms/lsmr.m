@@ -32,11 +32,11 @@ classdef lsmr
             
             [n,m]=size(x);
             xx = [ones(n,1) x];
-            y=t;
+            ye=t;
             
             % regularize
             C = diag([0 ones(1,m)]*obj.lambda);
-            invxx = xx'*xx + C;
+            invxx = pinv(xx'*xx + C);
             span = obj.smParams(1)*n;
             sh = floor(span/2);
             span = 2*sh+1;
@@ -49,10 +49,10 @@ classdef lsmr
             H=ones(n,1);
             u=H'*t;
             
-            perr = mse(t);
+            perr = sum(t.^2)/n;
             for i = 1:obj.iter
                 w=[];
-                w0 = invxx\(xx'*y);
+                w0 = invxx*(xx'*ye);
                 yp = xx*w0;
                 
                 %sort by prediction axis
@@ -60,12 +60,15 @@ classdef lsmr
                 xx=xx(ii,:);
                 H=H(ii,:);
                 yp=yp(ii,:);
+                ye=ye(ii,:);
                 t=t(ii,:);
                 y=t;
+%                 y=gpuArray(t);
                 %smooth iteratively using moving average
                 for j=1:obj.smParams(2)
                     y = smooth(y,span);
                 end
+%                 y=gather(y);
                 
                 % bend detection
                 iid1=locopt(y,1);
@@ -77,14 +80,14 @@ classdef lsmr
                 end
                 
                 % reduce points
-                iid=clustpoint(iid1,y,th);
+                iid =clustpoint(iid1,y,th);
                 lid =length(iid);
                 if lid >0
                     % calculate each segments
                     for j=1:lid
                         idx = yp>=yp(iid1(iid(j))) & yp <= yp(iid1(iid(j)+1));
                         ww = fitLS(xx(idx,:),t(idx,:),obj.lambda);
-                        if norm(ww(2:m+1))>1e-4
+                        if norm(ww(2:m+1))>1e-3
                             w=[w ww];
                         end
                     end
@@ -96,22 +99,38 @@ classdef lsmr
                 
                 
                 hh = tanh(xx * w);
+                htye= ye'*hh;
+                [~,ii] = sort(abs(htye),'descend');
+                htye=htye(ii);
+                hh=hh(:,ii);
+                w=w(:,ii);                
+                hth = sum(hh.*hh);
+                
+                sentinel = 0;
+             
                 for j=1:size(hh,2)
-                    [cond,inv,u,H] = blockInv(inv,u,H,hh(:,j),t);
-                    if cond
-                        w1 = [w1 w(:,j)];                        
+                    ee =ye-hh(:,j)*htye(j)/hth(j);
+                    rdc = sum(ee.^2)/n;
+                    if abs(rdc-perr)/perr>=1e-4                       
+                        [cond,inv,u,H] = blockInv(inv,u,H,hh(:,j),t);
+                        if cond 
+                            w1 = [w1 w(:,j)];
+                            sentinel = 1;                            
+                        end
+                    else
+                        break;
                     end
                 end
+                 % reduce the error iteratively
                 w2 =inv*u;
                 yp =H*w2;
-                y = t - yp; % reduce the error iteratively
-                
-                if abs((mse(y)-perr)/perr)<1e-3
-                    break;
-                else
-                    obj.weights={w1,w2};
-                    perr=mse(y);
-                    obj.err = perr;
+                ye = t - yp;
+                             
+                perr=sum(ye.^2)/n;
+                obj.err = perr;
+                obj.weights={w1,w2};
+                if ~sentinel
+                    break;                
                 end
             end
             obj.traintime=cputime - starting_time;                      
@@ -147,8 +166,26 @@ function idx = locopt(y,step)
     yy(1)=-1;
     yy(l)=-1;
     yy(step+1:l-step)=lh;
-
-    idx = find(yy<0);
+    
+    pt=0; 
+    for i=1:l  
+        if yy(i)==0
+            if ~pt
+                pt = 1;                
+            else
+                yy(i)=1;                
+            end
+        else
+            if pt
+                pt=0;
+                if yy(i)>0
+                    yy(i-1)=0;
+                end
+            end
+        end
+    end
+    
+    idx = find(yy<=0);
 end
 
 function [cond,inv,u,H]=blockInv(inv,u,H,h,t)
@@ -176,6 +213,8 @@ function iid = clustpoint(idx,x,s)
     d=abs(x(idx(2:l))-x(idx(1:l-1)));
     m=mean(d);
     iid=find(d > m * s );
-
 end
 
+function y=sigm(x)
+    y=1./(1+exp(-x));
+end

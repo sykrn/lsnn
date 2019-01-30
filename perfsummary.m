@@ -9,7 +9,7 @@ datalist = load(dpath,'benchmarks');
 datalist = datalist.('benchmarks')';
 datanames=datalist;
 
-p=load('performclasslsm.mat', 'perfs');
+p=load('performclassfinalpublish.mat', 'perfs');
 p =p.perfs;
 
 L=length(datanames);
@@ -23,35 +23,40 @@ LSM = zeros(L,1);
 PCAELM = zeros(L,1);
 EIELM = zeros(L,1);
 IELM = zeros(L,1);
-k='trtimePerf';
+k='tsPerf';%
 
 f=@mean;
 % f=@std;
 a=1i;
 for i = 1:L
+%     perf(i) = f(p.lsm.(datanames{i}).('tsPerf')) + std(p.lsm.(datanames{i}).('tsPerf'))*a;
+%     node(i) = f(p.lsm.(datanames{i}).('nNode')) + std(p.lsm.(datanames{i}).('nNode'))*a;
+%     ttime(i) = f(p.lsm.(datanames{i}).('trtimePerf')) + std(p.lsm.(datanames{i}).('trtimePerf'))*a;
     LSM(i) = f(p.lsm.(datanames{i}).(k)) + std(p.lsm.(datanames{i}).(k))*a;
-%     ELM(i) = f(p.elm.(datanames{i}).(k))+ std(p.elm.(datanames{i}).(k))*a;
-%     CPELM(i) = f(p.cpelm.(datanames{i}).(k)) + std(p.cpelm.(datanames{i}).(k))*a;
-%     DPELM(i) = f(p.dpelm.(datanames{i}).(k)) + std(p.dpelm.(datanames{i}).(k))*a;
-%     AIL(i) = f(p.ail.(datanames{i}).(k))+std(p.ail.(datanames{i}).(k))*a;
-%     BP(i) = f(p.bpnet.(datanames{i}).(k))+std(p.bpnet.(datanames{i}).(k))*a ;
-%     PCAELM(i) = f(p.pcaelm.(datanames{i}).(k))+std(p.pcaelm.(datanames{i}).(k))*a;
-%     EIELM(i) = f(p.eielm.(datanames{i}).(k))+std(p.eielm.(datanames{i}).(k))*a;
-%     IELM(i) = f(p.ielm.(datanames{i}).(k))+std(p.ielm.(datanames{i}).(k))*a; 
+    ELM(i) = f(p.elm.(datanames{i}).(k))+ std(p.elm.(datanames{i}).(k))*a;
+    CPELM(i) = f(p.cpelm.(datanames{i}).(k)) + std(p.cpelm.(datanames{i}).(k))*a;
+    DPELM(i) = f(p.dpelm.(datanames{i}).(k)) + std(p.dpelm.(datanames{i}).(k))*a;
+    AIL(i) = f(p.ail.(datanames{i}).(k))+std(p.ail.(datanames{i}).(k))*a;
+    BP(i) = f(p.bpnet.(datanames{i}).(k))+std(p.bpnet.(datanames{i}).(k))*a ;
+    PCAELM(i) = f(p.pcaelm.(datanames{i}).(k))+std(p.pcaelm.(datanames{i}).(k))*a;
+    EIELM(i) = f(p.eielm.(datanames{i}).(k))+std(p.eielm.(datanames{i}).(k))*a;
+    IELM(i) = f(p.ielm.(datanames{i}).(k))+std(p.ielm.(datanames{i}).(k))*a; 
 end
 
-ff = @(x)(round(x,3));
-
+ff = @(x)(round(x,4));
+% perf = ff(perf)';
+% node = ff(node)';
+% ttime = ff(ttime)';
 LSM = ff(LSM);
-% ELM= ff(ELM);
-% CPELM = ff(CPELM);
-% DPELM = ff(DPELM) ;
-% AIL = ff(AIL);
-% BP= ff(BP);
-% PCAELM = ff(PCAELM);
-% EIELM = ff(EIELM);
-% IELM = ff(IELM);
+ELM= ff(ELM);
+CPELM = ff(CPELM);
+DPELM = ff(DPELM) ;
+AIL = ff(AIL);
+BP= ff(BP);
+PCAELM = ff(PCAELM);
+EIELM = ff(EIELM);
+IELM = ff(IELM);
 
-% table(datanames,LSM,AIL,ELM,IELM,EIELM,PCAELM,DPELM,CPELM,BP)
+table(datanames,LSM,AIL,ELM,IELM,EIELM,PCAELM,DPELM,CPELM,BP)
 
-table(datanames,LSM)
+% table(datanames,perf,ttime,node)

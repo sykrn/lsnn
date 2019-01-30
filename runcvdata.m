@@ -3,8 +3,7 @@ function results = runcvdata(x,y,cvprt,net,class)
 %CVDATA Summary of this function goes here
 %   Detailed explanation goes here       
     
-    L = length(cvprt);
-    
+    L = length(cvprt);    
     results.trPerf = zeros(L,1);
     results.tsPerf = zeros(L,1);
     results.trtimePerf = zeros(L,1);

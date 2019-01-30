@@ -1,25 +1,30 @@
 % Hyperparameters searching for gunar datasets
 addpath(genpath(pwd()));
 
-% dpath ='D:\Codeplace\Dataset\GunarDataset\benchmarks.mat';
-% datasets = load(dpath,'benchmarks');
-% datasets = datasets.('benchmarks');
+dpath ='D:\Codeplace\Dataset\GunarDataset\benchmarks.mat';
+datasets = load(dpath,'benchmarks');
+datasets = datasets.('benchmarks');
 
-dpath = 'D:\Codeplace\Dataset\dataset_single\';
-datasets ={'abalone.csv','ailerons.csv','automgp.csv','bank.csv','boston.csv',...
-    'california.csv','elevator.csv','servo.csv','cpu_small.data','machine.data','triazines.data','r_wpbc.data' };
-n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
+% dpath = 'D:\Codeplace\Dataset\dataset_single\';
+% datasets ={'abalone.csv','ailerons.csv','automgp.csv','bank.csv','boston.csv',...
+%     'california.csv','elevator.csv','servo.csv','cpu_small.data','machine.data','triazines.data','r_wpbc.data' };
+% n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
+
+% if classification class=1, regression class=0
+class = 1;
 
 % hyperparams
-% nodes = 5:5:200;
-nodes = 1:15;
+nodes = 5:5:200;
+% nodes = 1:15;
+
+
 ncv = 10;
 
 
 bestnode = ones(1,length(datasets));
 
-alname = 'lsm';
-class = 0;
+alname = 'bp';
+
 
 
 for j = 1:length(datasets)
@@ -30,7 +35,7 @@ for j = 1:length(datasets)
 %         [j i]
         switch alname
             case 'lsm'
-                net = lsm(nodes(i),~class); %args: (iteration, isReg?)
+                net = lsmrf(nodes(i),~class); %args: (iteration, isReg?)
             case 'elm'
                 net = elm(nodes(i),1e-6); %args: (nHidden, cReg)
             case 'dpelm'
@@ -72,8 +77,6 @@ for j = 1:length(datasets)
         end
         
         
-        net.smParams(2)=10;
-        net.smParams(1)=0.01;
         results = runcvdata(x,y,cv,net,class); 
                
         if mean(results.tsPerf)<prev_err
@@ -88,8 +91,7 @@ for j = 1:length(datasets)
         end
         
     end
-    prev_err
-    
+    prev_err    
 end
 
-save([alname,'2_nodesreg'],'bestnode');
+save([alname,'r_classb'],'bestnode');
