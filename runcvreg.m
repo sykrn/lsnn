@@ -2,28 +2,23 @@
 
 addpath(genpath(pwd()));
 
-datapath = 'D:\Codeplace\Dataset\dataset_single\';
+datapath = 'datasets\regbenchmark\';
 datalist ={'abalone.csv','ailerons.csv','automgp.csv','bank.csv','boston.csv',...
     'california.csv','elevator.csv','servo.csv','cpu_small.data','machine.data','triazines.data','r_wpbc.data' };
 datanames ={'abalone','ailerons','autompg','bank','boston',...
     'california','elevators','servo','compAct','machineCPU','triazines','breastCancer' };
+n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
 L = length(datalist);
 
 netnames = {'lsm','elm','ielm','eielm','pcaelm','dpelm','cpelm','bpnet','ail'};
 
-n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
 
 
+% hyperparameters
 ELMnode = [25,45,30,190,50,80,125,30,125,10,10,10];
 BPnode = [10,20,10,20,5,10,5,10,45,10,5,5];
+LSMiter = [3,3,1,15,3,10,2,2,11,2,1,1];
 
-LSMiter = [3,3,1,15,3,10,2,2,11,2,1,1];%[1,1,2,6,3,7,3,2,4,2,1,1];%[4     4     1     7     3     9     4     1     6     2     2     1];
-% [1,1,1,6,2,5,1,2,11,3,1,1]
-% [2,2,2,9,3,6,1,3,9,1,1,1]
-% [1,2,2,4,2,8,2,1,4,5,1,1]
-% [1,1,2,6,2,6,3,2,4,1,1,1]
-% [1,1,2,7,3,10,2,4,4,2,1,1]
-% [1,3,1,15,4,14,2,3,11,3,1,1]
 iter = 50; % fifty trials
 
 perfs=struct;
