@@ -34,6 +34,14 @@ classdef lsmr
             xx = [ones(n,1) x];
             ye=t;
             
+            % preset thresholding
+            if obj.reg
+                eta = 0.05;
+            else
+                eta = 0.25;
+            end
+            
+            
             % regularize
             C = diag([0 ones(1,m)]*obj.lambda);
             invxx = pinv(xx'*xx + C);
@@ -72,15 +80,9 @@ classdef lsmr
                 
                 % bend detection
                 iid1=locopt(y,1);
-                % preset thresholding
-                if obj.reg
-                    th = 1/4;
-                else
-                    th = 1;
-                end
-                
                 % reduce points
-                iid =clustpoint(iid1,y,th);
+                
+                iid =clustpoint(iid1,y,eta);
                 lid =length(iid);
                 if lid >0
                     % calculate each segments
@@ -166,26 +168,15 @@ function idx = locopt(y,step)
     yy(1)=-1;
     yy(l)=-1;
     yy(step+1:l-step)=lh;
-    
-    pt=0; 
-    for i=1:l  
-        if yy(i)==0
-            if ~pt
-                pt = 1;                
-            else
-                yy(i)=1;                
-            end
-        else
-            if pt
-                pt=0;
-                if yy(i)>0
-                    yy(i-1)=0;
-                end
-            end
-        end
-    end
-    
     idx = find(yy<=0);
+end
+
+
+function iid = clustpoint(idx,y,eta)
+    deltay= max(y)-min(y);
+    l=length(idx);
+    d=abs(y(idx(2:l))-y(idx(1:l-1)));
+    iid=find(d >= eta*deltay);
 end
 
 function [cond,inv,u,H]=blockInv(inv,u,H,h,t)
@@ -205,14 +196,6 @@ function [cond,inv,u,H]=blockInv(inv,u,H,h,t)
     inv=[inv+inv_s*(theta*theta'), inv_c; inv_c' inv_s];   
     H=[H,h];
     u=[u; h'*t];    
-end
-
-function iid = clustpoint(idx,x,s)
-    l=length(idx);
-
-    d=abs(x(idx(2:l))-x(idx(1:l-1)));
-    m=mean(d);
-    iid=find(d > m * s );
 end
 
 function y=sigm(x)

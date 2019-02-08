@@ -29,7 +29,7 @@ for idx = 1:length(netnames)
     for k = 1:L        
         switch alname
             case 'lsm'
-                net = lsmrf(LSMiter(k),1); %args: (iteration, isReg?)
+                net = lsmr(LSMiter(k),1); %args: (iteration, isReg?)
             case 'elm'
                 net = elm(ELMnode(k),1e-6); %args: (nHidden, cReg)
             case 'dpelm'

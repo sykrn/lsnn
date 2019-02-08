@@ -35,7 +35,7 @@ for j = 1:length(datasets)
 %         [j i]
         switch alname
             case 'lsm'
-                net = lsmrf(nodes(i),~class); %args: (iteration, isReg?)
+                net = lsmr(nodes(i),~class); %args: (iteration, isReg?)
             case 'elm'
                 net = elm(nodes(i),1e-6); %args: (nHidden, cReg)
             case 'dpelm'
