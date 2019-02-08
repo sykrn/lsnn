@@ -6,4 +6,4 @@ All of thesee following algorithm are based on single-hidden layer feed-forward 
 List of algorithms:
 * ELM (Extreme Learning Machine), PCA-ELM (principal component analysis), I-ELM (incremental), EI-ELM (enhanced incremental), DP-ELM (destructive parsimonious), and CP-ELM (constructive parsimonious).
 * AIL (Analitycal Incremental Learning)
-* LSM (Local Sigmoid Model)
+* LSM (Local Sigmoid Method)
