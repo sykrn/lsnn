@@ -25,9 +25,9 @@ function results = runcvdata(x,y,cvprt,net,class)
             results.trPerf(i) = sum(y(idtr,:).*net.forward(x(idtr,:))<=0)/length(idtr);
             results.tsPerf(i) = sum(y(idts,:).*yp<=0)/length(idts);
         else
-            results.trPerf(i) = mse(y(idtr,:),net.forward(x(idtr,:)));
-            results.tsPerf(i) = mse(y(idts,:),yp);
-        end
+            results.trPerf(i) = sqrt(mse(y(idtr,:),net.forward(x(idtr,:))));
+            results.tsPerf(i) = sqrt(mse(y(idts,:),yp));
+        end        
         
         results.nNode(i) = size(net.weights{1},2);
     end

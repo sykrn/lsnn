@@ -3,13 +3,13 @@ clear
 % datanames ={'abalone','ailerons','autompg','bank','boston',...
 %     'california','elevators','servo','compAct','machineCPU','triazines','breastCancer' }';
 
-
+% 
 dpath ='D:\Codeplace\Dataset\GunarDataset\benchmarks.mat';
 datalist = load(dpath,'benchmarks');
 datalist = datalist.('benchmarks')';
 datanames=datalist;
 
-p=load('performclassfinalpublish.mat', 'perfs');
+p=load('performreg.mat', 'perfs');
 p =p.perfs;
 
 L=length(datanames);
@@ -23,15 +23,13 @@ LSM = zeros(L,1);
 PCAELM = zeros(L,1);
 EIELM = zeros(L,1);
 IELM = zeros(L,1);
-k='tsPerf';%
+
+% choosing metrics
+k='trtimePerf'; %'tsPerf';%nNode %trtimePerf
 
 f=@mean;
-% f=@std;
 a=1i;
 for i = 1:L
-%     perf(i) = f(p.lsm.(datanames{i}).('tsPerf')) + std(p.lsm.(datanames{i}).('tsPerf'))*a;
-%     node(i) = f(p.lsm.(datanames{i}).('nNode')) + std(p.lsm.(datanames{i}).('nNode'))*a;
-%     ttime(i) = f(p.lsm.(datanames{i}).('trtimePerf')) + std(p.lsm.(datanames{i}).('trtimePerf'))*a;
     LSM(i) = f(p.lsm.(datanames{i}).(k)) + std(p.lsm.(datanames{i}).(k))*a;
     ELM(i) = f(p.elm.(datanames{i}).(k))+ std(p.elm.(datanames{i}).(k))*a;
     CPELM(i) = f(p.cpelm.(datanames{i}).(k)) + std(p.cpelm.(datanames{i}).(k))*a;
@@ -44,9 +42,6 @@ for i = 1:L
 end
 
 ff = @(x)(round(x,4));
-% perf = ff(perf)';
-% node = ff(node)';
-% ttime = ff(ttime)';
 LSM = ff(LSM);
 ELM= ff(ELM);
 CPELM = ff(CPELM);
@@ -58,5 +53,3 @@ EIELM = ff(EIELM);
 IELM = ff(IELM);
 
 table(datanames,LSM,AIL,ELM,IELM,EIELM,PCAELM,DPELM,CPELM,BP)
-
-% table(datanames,perf,ttime,node)

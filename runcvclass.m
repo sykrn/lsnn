@@ -10,12 +10,12 @@ datanames = datalist;
 
 L = length(datalist);
 
-netnames = {'lsm','cpelm','lsm','elm','ielm','eielm','pcaelm','dpelm','ail','bpnet'};
+netnames = {'lsm','elm','ielm','eielm','pcaelm','dpelm','cpelm','bpnet','ail'};
 
 % hyperparameters
 ELMnode = [50    20    30    10    40    30   200    40   165    35    20    65    85];
 BPnode = [15    45    45    10    75    10    15    50    80    25    25     5    10];
-LSMiter=[6,1,1,5,1,2,15,15,7,7,5,1,4];
+LSMiter=[11,1,1,3,4,2,15,15,7,6,4,1,5]; %[11,1,1,4,4,2,15,15,4,8,4,1,7];%[6,1,1,5,1,2,15,15,7,7,5,1,4];
 
 perfs=struct;
 
@@ -46,9 +46,8 @@ for idx = 1:length(netnames)
         
         disp(datanames{k});
         dt=load(dpath,datalist{k});
-        x=dt.(datalist{k}).x;
-        y=dt.(datalist{k}).t;
-        % to ensure the splits are the same for all algorithms
+        x=dt.(datalist{k}).x; 
+        y=dt.(datalist{k}).t;      
         cv=struct;
         for ii = 1:size(dt.(datalist{k}).test,1)
             cv(ii).test = dt.(datalist{k}).test(ii,:);
@@ -58,7 +57,7 @@ for idx = 1:length(netnames)
     end    
 end
 
-save('performsclassfinalpublish','perfs');
+save('performclass','perfs');
 
 
 

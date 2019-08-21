@@ -8,16 +8,17 @@ datalist ={'abalone.csv','ailerons.csv','automgp.csv','bank.csv','boston.csv',..
 datanames ={'abalone','ailerons','autompg','bank','boston',...
     'california','elevators','servo','compAct','machineCPU','triazines','breastCancer' };
 n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
-L = length(datalist);
+L = length(datanames);
 
 netnames = {'lsm','elm','ielm','eielm','pcaelm','dpelm','cpelm','bpnet','ail'};
+% netnames = {'elm'};
 
 
 
 % hyperparameters
 ELMnode = [25,45,30,190,50,80,125,30,125,10,10,10];
 BPnode = [10,20,10,20,5,10,5,10,45,10,5,5];
-LSMiter = [3,3,1,15,3,10,2,2,11,2,1,1];
+LSMiter = [3,3,1,10,3,10,2,2,11,2,1,1]; 
 
 iter = 50; % fifty trials
 
@@ -48,10 +49,10 @@ for idx = 1:length(netnames)
                 net = bpnet(BPnode(k)); %args: (nHidden)
         end
         disp(datanames{k});
-        dataset=normalize(csvread([datapath,datalist{k}]));
+        dataset=mapminmax(csvread([datapath,datalist{k}])',-1,1)';
         dataset(isnan(dataset))=0;
         x=dataset(:,1:(size(dataset,2)-1));
-        y=mapminmax(dataset(:,size(dataset,2)),-1,1);
+        y=mapminmax(dataset(:,size(dataset,2))',0,1)';
         
         % to ensure the splits are the same for all algorithms
         rng(0);
@@ -66,7 +67,7 @@ for idx = 1:length(netnames)
     
 end
 
-save('performsregfinalpublish', 'perfs');
+save('performreg', 'perfs');
 
 
 

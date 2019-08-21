@@ -23,7 +23,7 @@ classdef lsmr
         function y = forward(obj,x)
             %METHOD1 Summary of this method goes here
             %   Detailed explanation goes here
-            n = size(x,1);
+            n = size(x,1);             
             y = [ones(n,1) tanh([ones(n,1) x]*obj.weights{1})]*obj.weights{2};
         end
         
@@ -113,7 +113,7 @@ classdef lsmr
                 for j=1:size(hh,2)
                     ee =ye-hh(:,j)*htye(j)/hth(j);
                     rdc = sum(ee.^2)/n;
-                    if abs(rdc-perr)/perr>=1e-4                       
+                    if abs(rdc-perr)/perr>=1e-4 || isempty(w1)                     
                         [cond,inv,u,H] = blockInv(inv,u,H,hh(:,j),t);
                         if cond 
                             w1 = [w1 w(:,j)];

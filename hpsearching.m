@@ -5,17 +5,17 @@ dpath ='D:\Codeplace\Dataset\GunarDataset\benchmarks.mat';
 datasets = load(dpath,'benchmarks');
 datasets = datasets.('benchmarks');
 
-% dpath = 'D:\Codeplace\Dataset\dataset_single\';
-% datasets ={'abalone.csv','ailerons.csv','automgp.csv','bank.csv','boston.csv',...
-%     'california.csv','elevator.csv','servo.csv','cpu_small.data','machine.data','triazines.data','r_wpbc.data' };
-% n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
+dpath = 'D:\Codeplace\Dataset\dataset_single\';
+datasets ={'abalone.csv','ailerons.csv','automgp.csv','bank.csv','boston.csv',...
+    'california.csv','elevator.csv','servo.csv','cpu_small.data','machine.data','triazines.data','r_wpbc.data' };
+n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
 
 % if classification class=1, regression class=0
-class = 1;
+class = 0;
 
 % hyperparams
-nodes = 5:5:200;
-% nodes = 1:15;
+% nodes = 5:5:200;
+nodes = 1:15;
 
 
 ncv = 10;
@@ -23,7 +23,7 @@ ncv = 10;
 
 bestnode = ones(1,length(datasets));
 
-alname = 'bp';
+alname = 'lsm';
 
 
 
@@ -63,13 +63,13 @@ for j = 1:length(datasets)
                 cv(ii).test = dt.(datasets{j}).test(ii,:);
                 cv(ii).training = dt.(datasets{j}).train(ii,:);            
             end
-            x=dt.(datasets{j}).x;
+            x=mapminmax(dt.(datasets{j}).x',-1,1)';  
             y=dt.(datasets{j}).t;
         else 
             dt=normalize(csvread([dpath,datasets{j}]));
             dt(isnan(dt))=0;
-            x=dt(:,1:(size(dt,2)-1));
-            y=dt(:,size(dt,2));
+            x=dt(:,1:(size(dt,2)-1));x=mapminmax(x',-1,1)';
+            y=dt(:,size(dt,2));y=mapminmax(y',0,1)';
             cv(1) = cvpartition(y,'HoldOut',n_testing(j),'Stratify',false);
             for ii = 1:ncv-1
                 cv(ii+1) = repartition(cv(ii));
@@ -94,4 +94,4 @@ for j = 1:length(datasets)
     prev_err    
 end
 
-save([alname,'r_classb'],'bestnode');
+save([alname,'r_classbrev'],'bestnode');
