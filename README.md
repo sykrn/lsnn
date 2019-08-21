@@ -13,3 +13,4 @@ List of algorithms:
 * Regression case: run `runcvreg.m`.
 * Classification case: run `runcvclass.m`.
 * To find the hyperparameters: run `hpsearching.m`, you can change the case to regression or classification.
+* To summary the metrics (accuracy, #nodes, time): run `perfsummay.m, you need to change the metrics manually --see/read the code.
