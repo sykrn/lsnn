@@ -21,7 +21,7 @@ AIL = zeros(L,1);
 BP = zeros(L,1);
 LSM = zeros(L,1);
 EBELM = zeros(L,1);
-% PCAELM = zeros(L,1);
+PCAELM = zeros(L,1);
 EIELM = zeros(L,1);
 IELM = zeros(L,1);
 
@@ -38,7 +38,7 @@ for i = 1:L
     AIL(i) = f(p.ail.(datanames{i}).(k))+std(p.ail.(datanames{i}).(k))*a;
     BP(i) = f(p.bpnet.(datanames{i}).(k))+std(p.bpnet.(datanames{i}).(k))*a ;
     EBELM(i) = f(p.ebelm.(datanames{i}).(k))+std(p.ebelm.(datanames{i}).(k))*a;
-%     PCAELM(i) = f(p.pcaelm.(datanames{i}).(k))+std(p.pcaelm.(datanames{i}).(k))*a;
+    PCAELM(i) = f(p.pcaelm.(datanames{i}).(k))+std(p.pcaelm.(datanames{i}).(k))*a;
     EIELM(i) = f(p.eielm.(datanames{i}).(k))+std(p.eielm.(datanames{i}).(k))*a;
     IELM(i) = f(p.ielm.(datanames{i}).(k))+std(p.ielm.(datanames{i}).(k))*a; 
 end
@@ -53,7 +53,7 @@ BP= ff(BP);
 EBELM = ff(EBELM);
 EIELM = ff(EIELM);
 IELM = ff(IELM);
-% PCAELM = ff(PCAELM);
+PCAELM = ff(PCAELM);
 
 t= table(datanames,LSM,AIL,ELM,IELM,EIELM,EBELM,DPELM,CPELM,BP)
 writetable(t,'performclassv17')
