@@ -1,5 +1,5 @@
 %% Regression dataset
-
+clear;
 addpath(genpath(pwd()));
 
 datapath = 'datasets\regbenchmark\';
@@ -10,18 +10,18 @@ datanames ={'abalone','ailerons','autompg','bank','boston',...
 n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
 L = length(datanames);
 
-netnames = {'lsm','elm','ielm','eielm','pcaelm','dpelm','cpelm','bpnet','ail'};
-% netnames = {'elm'};
-
-
+netnames = {'lsm','elm','ielm','eielm','ebelm','pcaelm','dpelm','cpelm','bpnet','ail'};
+% netnames = {'ielm','eielm','ebelm'};
 
 % hyperparameters
-ELMnode = [25,45,30,190,50,80,125,30,125,10,10,10];
+ELMnode = [45,65,30,200,35,105,80,20,125,10,25,10];
+         %[25,45,30,190,50,80,125,30,125,10,10,10];
 BPnode = [10,20,10,20,5,10,5,10,45,10,5,5];
 LSMiter = [3,3,1,10,3,10,2,2,11,2,1,1]; 
 
 iter = 50; % fifty trials
 
+% perfs=load('performregrev130919xxx.mat', 'perfs');
 perfs=struct;
 
 for idx = 1:length(netnames)  
@@ -43,6 +43,8 @@ for idx = 1:length(netnames)
                 net = eielm(ELMnode(k),10); %args: (nHidden)
             case 'ielm'
                 net = eielm(ELMnode(k),1); %args: (nHidden)
+            case 'ebelm'
+                net = ebelm(ELMnode(k),10); %args: (nHidden)
             case 'ail'
                 net = ail(BPnode(k)*2,1e-6); %args: (iteration,  cReg/Lambda)
             otherwise
@@ -67,7 +69,7 @@ for idx = 1:length(netnames)
     
 end
 
-save('performreg', 'perfs');
+save('performregv17', 'perfs');
 
 
 

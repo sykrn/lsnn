@@ -8,6 +8,7 @@ classdef eielm
         weights = {}
         traintime = 0
         err = 0
+        eta =1e-4
     end
     
     methods
@@ -56,7 +57,12 @@ classdef eielm
                         eopt=en;
                     end 
                 end
-                E=ev;        
+                E=ev;
+                if (mean(E.*E) <obj.eta)
+                    w1(:,i+1:nHidden)=[];
+                    w2(i+1:nHidden,:)=[];
+                    break
+                end
             end
  
             obj.traintime=cputime-start_time;

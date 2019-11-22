@@ -14,17 +14,14 @@ n_testing=[2177,4129,200,3692,256,12640,5517,87,4192,109,86,94];
 class = 0;
 
 % hyperparams
-% nodes = 5:5:200;
-nodes = 1:15;
-
+nodes = 5:5:200;
+% nodes = 1:15;
 
 ncv = 10;
 
-
 bestnode = ones(1,length(datasets));
 
-alname = 'lsm';
-
+alname = 'elm';
 
 
 for j = 1:length(datasets)
@@ -94,4 +91,4 @@ for j = 1:length(datasets)
     prev_err    
 end
 
-save([alname,'r_classbrev'],'bestnode');
+save([alname,'r_regbrev'],'bestnode');

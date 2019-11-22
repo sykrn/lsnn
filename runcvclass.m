@@ -10,7 +10,7 @@ datanames = datalist;
 
 L = length(datalist);
 
-netnames = {'lsm','elm','ielm','eielm','pcaelm','dpelm','cpelm','bpnet','ail'};
+netnames = {'lsm','elm','ielm','eielm','ebelm','pcaelm','dpelm','cpelm','bpnet','ail'};
 
 % hyperparameters
 ELMnode = [50    20    30    10    40    30   200    40   165    35    20    65    85];
@@ -36,6 +36,8 @@ for idx = 1:length(netnames)
                 net = pcaelm(0.95, 1e-6); %args: (confLev,cReg)
             case 'eielm'
                 net = eielm(ELMnode(k),10); %args: (nHidden)
+            case 'ebelm'
+                net = ebelm(ELMnode(k),10); %args: (nHidden)
             case 'ielm'
                 net = eielm(ELMnode(k),1); %args: (nHidden)
             case 'ail'
@@ -57,7 +59,7 @@ for idx = 1:length(netnames)
     end    
 end
 
-save('performclass','perfs');
+save('performclassv17','perfs');
 
 
 
